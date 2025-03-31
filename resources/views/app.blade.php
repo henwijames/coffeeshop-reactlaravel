@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="coffee">
+<html data-theme="coffee" class="h-full">
 
 <head>
   <meta charset="utf-8" />
@@ -9,7 +9,7 @@
   @inertiaHead
 </head>
 
-<body>
+<body class="h-full">
   @inertia
 </body>
 

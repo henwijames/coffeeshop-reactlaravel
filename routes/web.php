@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisterUserController;
+use App\Http\Controllers\Auth\SessionController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -8,9 +10,15 @@ Route::get('/', function () {
 });
 
 
-Route::get('/login', function () {
-    return Inertia::render('Auth/Login');
+
+Route::get('/dashboard', function () {
+    dd('you are autheniticated');
 });
-Route::get('/signup', function () {
-    return Inertia::render('Auth/Signup');
+
+Route::middleware('guest')->group(function () {
+    Route::get('/signup', [RegisterUserController::class, 'create']);
+    Route::post('/signup', [RegisterUserController::class, 'store']);
+
+    Route::get('/login', [SessionController::class, 'create']);
+    Route::post('/login', [SessionController::class, 'store']);
 });
