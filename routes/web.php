@@ -6,13 +6,19 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Home', ['name' => "Henry"]);
+    return Inertia::render('Home');
 });
 
 
 
 Route::get('/dashboard', function () {
-    dd('you are autheniticated');
+    return Inertia::render('Dashboard');
+});
+Route::get('/products', function () {
+    return Inertia::render('Products');
+});
+Route::get('/orders', function () {
+    return Inertia::render('Orders');
 });
 
 Route::middleware('guest')->group(function () {
@@ -22,3 +28,5 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [SessionController::class, 'create']);
     Route::post('/login', [SessionController::class, 'store']);
 });
+
+Route::delete('/logout', [SessionController::class, 'destroy'])->middleware('auth');

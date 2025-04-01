@@ -1,6 +1,7 @@
 import { Link } from "@inertiajs/react";
 import Logo from "@public/logo.webp";
 import BackgroundOverlay from "../../Components/BackgroundOverlay";
+import Input from "../../Components/Input";
 
 export default function Signup() {
     return (
@@ -12,84 +13,46 @@ export default function Signup() {
                     src={Logo}
                     className="mx-auto h-10 w-auto"
                 />
-                <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight ">
+                <h2 className="text-center text-2xl/9 font-bold tracking-tight ">
                     Sign up an account
                 </h2>
             </div>
 
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+            <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm">
                 <form action="#" method="POST" className="space-y-6">
                     <div>
-                        <label
-                            htmlFor="name"
-                            className="block text-sm/6 font-medium "
-                        >
-                            Full Name
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                name="name"
-                                className="input w-full"
-                                required
-                                placeholder="Toto Asukal"
-                            />
-                        </div>
+                        <Input
+                            label="Full Name"
+                            name="name"
+                            placeholder="Toto Asukal"
+                        />
                     </div>
                     <div>
-                        <label
-                            htmlFor="email"
-                            className="block text-sm/6 font-medium "
-                        >
-                            Email Address
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                name="email"
-                                className="input w-full"
-                                type="email"
-                                required
-                                placeholder="mail@site.com"
-                            />
-                        </div>
+                        <Input
+                            label="Email Address"
+                            name="email"
+                            type="email"
+                            placeholder="Email Address"
+                        />
                     </div>
 
                     <div>
-                        <label
-                            htmlFor="password"
-                            className="block text-sm/6 font-medium "
-                        >
-                            Password
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                type="password"
-                                className="input w-full"
-                                required
-                                placeholder="Password"
-                                name="password"
-                                minlength="8"
-                            />
-                        </div>
+                        <Input
+                            label="Password"
+                            name="password"
+                            type="password"
+                            placeholder="Password"
+                            minlength="8"
+                        />
                     </div>
                     <div>
-                        <label
-                            htmlFor="password"
-                            className="block text-sm/6 font-medium "
-                        >
-                            Confirm Password
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                type="password"
-                                className="input w-full"
-                                name="password_confirmation"
-                                required
-                                placeholder="Password"
-                                minlength="8"
-                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                                title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
-                            />
-                        </div>
+                        <Input
+                            label="Confirm Password"
+                            name="password_confirmation"
+                            type="password"
+                            placeholder="Confirm Password"
+                            minlength="8"
+                        />
                     </div>
 
                     <div>
@@ -103,9 +66,9 @@ export default function Signup() {
                 </form>
 
                 <p className="mt-10 text-center text-sm/6 text-gray-500">
-                    Not registered?{" "}
-                    <Link href="/signup" className="font-semibold text-primary">
-                        Sign up here
+                    Already registered?{" "}
+                    <Link href="/login" className="font-semibold text-primary">
+                        Login here
                     </Link>
                 </p>
             </div>

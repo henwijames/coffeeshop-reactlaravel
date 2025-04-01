@@ -1,0 +1,32 @@
+const Input = ({
+    label,
+    name,
+    type = "text",
+    placeholder = "",
+    minlength = "",
+    error,
+    value,
+}) => {
+    return (
+        <div>
+            <label htmlFor={name} className="block text-sm/6 font-medium ">
+                {label}
+            </label>
+            <div className="mt-2">
+                <input
+                    id={name}
+                    name={name}
+                    className="input validator w-full"
+                    type={type}
+                    value={value}
+                    required
+                    placeholder={placeholder}
+                    minlength={minlength}
+                />
+                {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+            </div>
+        </div>
+    );
+};
+
+export default Input;
