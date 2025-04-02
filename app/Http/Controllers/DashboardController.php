@@ -1,22 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 
-class RegisterUserController extends Controller
+class DashboardController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return Inertia::render("Dashboard");
     }
 
     /**
@@ -24,7 +20,7 @@ class RegisterUserController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Auth/Signup');
+        //
     }
 
     /**
@@ -32,17 +28,7 @@ class RegisterUserController extends Controller
      */
     public function store(Request $request)
     {
-        $attributes = request()->validate([
-            'name' => ['required', 'string'],
-            'email' => ['required', 'string', 'email', 'unique:users'],
-            'password' => ['required', 'confirmed', Password::min(8)]
-        ]);
-
-        $user = User::create($attributes);
-
-        Auth::login($user);
-
-        return redirect('/dashboard');
+        //
     }
 
     /**

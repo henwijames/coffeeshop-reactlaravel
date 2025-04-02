@@ -12,6 +12,7 @@ import {
 import { Coffee, Users, DollarSign, ShoppingBag, Calendar } from "lucide-react";
 import PageHeading from "../Components/PageHeading";
 import AuthLayout from "../Layouts/AuthLayout";
+import StatsCard from "../Components/StatsCard";
 
 const salesData = [
     { name: "Jan", sales: 4000 },
@@ -20,6 +21,12 @@ const salesData = [
     { name: "Apr", sales: 2780 },
     { name: "May", sales: 1890 },
     { name: "Jun", sales: 2390 },
+    { name: "July", sales: 390 },
+    { name: "August", sales: 2390 },
+    { name: "September", sales: 230 },
+    { name: "October", sales: 290 },
+    { name: "November", sales: 2390 },
+    { name: "December", sales: 2090 },
 ];
 
 const orderData = [
@@ -32,31 +39,6 @@ const orderData = [
     },
     // ... rest of order data
 ];
-
-const StatsCard = ({ icon, title, value, trend, color }) => {
-    const IconComponent = icon;
-    return (
-        <div className="bg-base-200 p-6 rounded-lg shadow-md">
-            <div className="flex justify-between items-start">
-                <div>
-                    <p className="text-gray-500 text-sm font-medium">{title}</p>
-                    <h3 className="text-2xl font-bold mt-2">{value}</h3>
-                    <p
-                        className={`text-sm mt-2 ${
-                            trend > 0 ? "text-green-500" : "text-red-500"
-                        }`}
-                    >
-                        {trend > 0 ? "+" : ""}
-                        {trend}% from last month
-                    </p>
-                </div>
-                <div className={`p-3 rounded-full bg-primary text-white`}>
-                    <IconComponent size={20} className="" />
-                </div>
-            </div>
-        </div>
-    );
-};
 
 export default function Dashboard() {
     return (
@@ -73,28 +55,24 @@ export default function Dashboard() {
                     title="Total Revenue"
                     value="$24,567"
                     trend={12.5}
-                    color="bg-primary"
                 />
                 <StatsCard
                     icon={ShoppingBag}
                     title="Orders"
                     value="452"
                     trend={5.2}
-                    color="bg-blue-500"
                 />
                 <StatsCard
                     icon={Users}
                     title="Customers"
                     value="1,257"
                     trend={8.1}
-                    color="bg-purple-500"
                 />
                 <StatsCard
                     icon={Coffee}
                     title="Products"
                     value="45"
                     trend={-2.3}
-                    color="bg-amber-500"
                 />
             </div>
 
@@ -115,12 +93,11 @@ export default function Dashboard() {
                                     bottom: 5,
                                 }}
                             >
-                                <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="name" />
                                 <YAxis />
                                 <Tooltip />
-                                <Legend />
-                                <Bar dataKey="sales" fill="#3b82f6" />
+                                <Legend formatter={() => "Sales"} />
+                                <Bar dataKey="sales" fill="#DB924C" />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>

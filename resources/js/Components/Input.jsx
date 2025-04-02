@@ -6,6 +6,7 @@ const Input = ({
     minlength = "",
     error,
     value,
+    onChange,
 }) => {
     return (
         <div>
@@ -21,7 +22,8 @@ const Input = ({
                     value={value}
                     required
                     placeholder={placeholder}
-                    minlength={minlength}
+                    minLength={minlength}
+                    onChange={onChange}
                 />
                 {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
             </div>

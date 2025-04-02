@@ -50,9 +50,9 @@ export default function GuestLayout({ children }) {
                         ))}
                     </div>
                     <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-                        <a href="#" className="text-sm font-semibold">
+                        <Link href="/login" className="text-sm font-semibold">
                             Log in <span aria-hidden="true">&rarr;</span>
-                        </a>
+                        </Link>
                     </div>
                 </nav>
 
@@ -98,12 +98,12 @@ export default function GuestLayout({ children }) {
                                     {item.name}
                                 </a>
                             ))}
-                            <a
-                                href="#"
+                            <Link
+                                href="/login"
                                 className="block rounded-lg px-3 py-2.5 text-base font-semibold text-gray-900 hover:bg-gray-50"
                             >
                                 Log in
-                            </a>
+                            </Link>
                         </div>
                     </DialogPanel>
                 </Dialog>

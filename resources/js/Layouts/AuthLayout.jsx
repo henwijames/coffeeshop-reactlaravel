@@ -28,7 +28,7 @@ import {
     PieChart,
 } from "lucide-react";
 import Sidebar from "../Components/Sidebar";
-import PageHeading from "../Components/PageHeading";
+import SidebarHeader from "../Components/SidebarHeader";
 
 const salesData = [
     { name: "Jan", sales: 4000 },
@@ -138,70 +138,7 @@ export default function AuthLayout({ children }) {
             {/* Main Content */}
             <div className="flex-1 overflow-auto">
                 {/* Top Navigation */}
-                <header className="bg-base-300 shadow ">
-                    <div className="px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-                        <button
-                            className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none"
-                            onClick={openSidebar}
-                        >
-                            <Menu size={24} />
-                        </button>
-
-                        <div className="flex items-center space-x-4 ml-auto">
-                            <button className="p-1 rounded-full text-gray-400 hover:text-gray-500 hover:bg-gray-100">
-                                <Bell size={20} />
-                            </button>
-
-                            <div className="relative">
-                                <button
-                                    className="flex items-center space-x-2 focus:outline-none"
-                                    onClick={() =>
-                                        setUserMenuOpen(!userMenuOpen)
-                                    }
-                                >
-                                    <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
-                                        <User
-                                            size={18}
-                                            className="text-gray-600"
-                                        />
-                                    </div>
-                                    <span className="text-sm font-medium hidden md:block">
-                                        Admin User
-                                    </span>
-                                    <ChevronDown
-                                        size={16}
-                                        className="text-gray-500"
-                                    />
-                                </button>
-
-                                {userMenuOpen && (
-                                    <div className="absolute right-0 mt-2 w-48 bg-base-200 rounded-md shadow-lg py-1 z-10">
-                                        <Link
-                                            href="#"
-                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                        >
-                                            Your Profile
-                                        </Link>
-                                        <Link
-                                            href="#"
-                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                        >
-                                            Settings
-                                        </Link>
-                                        <form method="POST" action="/logout">
-                                            <button
-                                                type="submit"
-                                                className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            >
-                                                Sign out
-                                            </button>
-                                        </form>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </header>
+                <SidebarHeader openSidebar={openSidebar} />
 
                 {/* Dashboard Content */}
                 <main className="p-6">{children}</main>

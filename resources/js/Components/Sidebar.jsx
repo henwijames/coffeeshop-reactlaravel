@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 const Sidebar = ({ isOpen, onClose }) => {
-    const { url, component } = usePage();
+    const { url } = usePage();
     const navLinks = [
         { id: 1, name: "Dashboard", href: "/dashboard", icon: Home },
         { id: 2, name: "Products", href: "/products", icon: Coffee },

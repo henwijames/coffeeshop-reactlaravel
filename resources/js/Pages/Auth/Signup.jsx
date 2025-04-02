@@ -1,11 +1,37 @@
-import { Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import Logo from "@public/logo.webp";
 import BackgroundOverlay from "../../Components/BackgroundOverlay";
 import Input from "../../Components/Input";
+import { useState } from "react";
 
 export default function Signup() {
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
+    });
+    const [errors, setErrors] = useState({});
+
+    const handleChange = (e) => {
+        const key = e.target.id;
+        const value = e.target.value;
+        setFormData((formData) => ({
+            ...formData,
+            [key]: value,
+        }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        router.post("/signup", formData, {
+            onError: (err) => setErrors(err),
+        });
+    };
     return (
         <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+            <Head title="Signup" />
             <BackgroundOverlay />
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <img
@@ -19,12 +45,15 @@ export default function Signup() {
             </div>
 
             <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm">
-                <form action="#" method="POST" className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
                         <Input
                             label="Full Name"
                             name="name"
                             placeholder="Toto Asukal"
+                            value={formData.name}
+                            onChange={handleChange}
+                            error={errors.name}
                         />
                     </div>
                     <div>
@@ -33,6 +62,9 @@ export default function Signup() {
                             name="email"
                             type="email"
                             placeholder="Email Address"
+                            value={formData.email}
+                            onChange={handleChange}
+                            error={errors.email}
                         />
                     </div>
 
@@ -43,6 +75,9 @@ export default function Signup() {
                             type="password"
                             placeholder="Password"
                             minlength="8"
+                            value={formData.password}
+                            onChange={handleChange}
+                            error={errors.password}
                         />
                     </div>
                     <div>
@@ -52,6 +87,9 @@ export default function Signup() {
                             type="password"
                             placeholder="Confirm Password"
                             minlength="8"
+                            value={formData.password_confirmation}
+                            onChange={handleChange}
+                            error={errors.password_confirmation}
                         />
                     </div>
 
