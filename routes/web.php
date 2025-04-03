@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\RegisterUserController;
 use App\Http\Controllers\Auth\SessionController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -12,11 +13,7 @@ Route::get('/', function () {
     return Inertia::render('Home');
 });
 
-
-
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
-Route::get('/products', [ProductController::class, 'index'])->middleware('auth');
-Route::get('/orders', [OrderController::class, 'index'])->middleware('auth');
+Route::fallback(fn() => Inertia::render('Errors/NotFound'));
 
 Route::middleware('guest')->group(function () {
     Route::get('/signup', [RegisterUserController::class, 'create']);
@@ -26,4 +23,15 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [SessionController::class, 'store'])->name('login');
 });
 
-Route::delete('/logout', [SessionController::class, 'destroy'])->middleware('auth');
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/products', [ProductController::class, 'index']);
+    Route::get('/orders', [OrderController::class, 'index']);
+
+    Route::get('/categories', [CategoryController::class, 'create']);
+    Route::post('/categories', [CategoryController::class, 'store']);
+    Route::put('/categories/{id}', [CategoryController::class, 'update']);
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+
+    Route::delete('/logout', [SessionController::class, 'destroy']);
+});

@@ -1,3 +1,4 @@
+import { Link } from "@inertiajs/react";
 import GuestLayout from "../Layouts/GuestLayout";
 
 const Home = () => {
@@ -11,15 +12,12 @@ const Home = () => {
                 lorem cupidatat commodo.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-                <a
-                    href="#"
+                <Link
+                    href="/login"
                     className="rounded-md btn px-4 py-2 text-sm font-semibold text-white"
                 >
                     Get started
-                </a>
-                <a href="#" className="text-sm font-semibold ">
-                    Learn more <span aria-hidden="true">→</span>
-                </a>
+                </Link>
             </div>
         </>
     );

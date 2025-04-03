@@ -25,6 +25,19 @@ export default function Signup() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        if (formData.password !== formData.password_confirmation) {
+            setFormData((prevData) => ({
+                ...prevData,
+                password: "",
+                password_confirmation: "",
+            }));
+            setErrors({
+                ...errors,
+                password_confirmation: "Password do not match",
+            });
+            return;
+        }
+
         router.post("/signup", formData, {
             onError: (err) => setErrors(err),
         });
@@ -103,7 +116,7 @@ export default function Signup() {
                     </div>
                 </form>
 
-                <p className="mt-10 text-center text-sm/6 text-gray-500">
+                <p className="mt-10 text-center text-sm/6 text-gray-300">
                     Already registered?{" "}
                     <Link href="/login" className="font-semibold text-primary">
                         Login here

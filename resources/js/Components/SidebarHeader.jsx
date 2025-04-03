@@ -26,7 +26,7 @@ const SidebarHeader = ({ openSidebar }) => {
         <header className="bg-base-300 shadow ">
             <div className="px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
                 <button
-                    className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none"
+                    className="lg:hidden p-2 rounded-md hover:bg-base-100 focus:outline-none transition-colors duration-300"
                     onClick={openSidebar}
                 >
                     <Menu size={24} />
@@ -70,7 +70,7 @@ const SidebarHeader = ({ openSidebar }) => {
                                     onClick={handleLogout}
                                     className="w-full text-left block px-4 py-2 text-sm hover:text-white transition-colors duration-300 cursor-pointer"
                                 >
-                                    Sign out
+                                    Log Out
                                 </button>
                             </div>
                         )}

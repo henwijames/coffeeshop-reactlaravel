@@ -11,16 +11,23 @@ import {
     Settings,
     X,
     Icon,
+    ChartBarStacked,
 } from "lucide-react";
 
 const Sidebar = ({ isOpen, onClose }) => {
     const { url } = usePage();
     const navLinks = [
         { id: 1, name: "Dashboard", href: "/dashboard", icon: Home },
-        { id: 2, name: "Products", href: "/products", icon: Coffee },
-        { id: 3, name: "Customers", href: "/customers", icon: Users },
-        { id: 4, name: "Orders", href: "/orders", icon: ShoppingBag },
-        { id: 5, name: "Settings", href: "/settings", icon: Settings },
+        {
+            id: 2,
+            name: "Categories",
+            href: "/categories",
+            icon: ChartBarStacked,
+        },
+        { id: 3, name: "Products", href: "/products", icon: Coffee },
+        { id: 4, name: "Customers", href: "/customers", icon: Users },
+        { id: 5, name: "Orders", href: "/orders", icon: ShoppingBag },
+        { id: 6, name: "Settings", href: "/settings", icon: Settings },
     ];
     return (
         <>
@@ -45,7 +52,10 @@ const Sidebar = ({ isOpen, onClose }) => {
                             Coffee Shop
                         </span>
                     </div>
-                    <button className="lg:hidden" onClick={onClose}>
+                    <button
+                        className="p-2 rounded-md hover:bg-base-100 focus:outline-none transition-colors duration-300"
+                        onClick={onClose}
+                    >
                         <X size={20} />
                     </button>
                 </div>
