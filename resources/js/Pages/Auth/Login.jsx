@@ -87,7 +87,7 @@ export default function Login() {
                     </div>
                 </form>
 
-                <p className="mt-10 text-center text-sm/6 text-gray-300">
+                <p className="mt-10 text-center text-sm/6 ">
                     Already registered?{" "}
                     <Link href="/signup" className="font-semibold text-primary">
                         Sign up here

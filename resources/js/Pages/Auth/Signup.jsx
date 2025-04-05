@@ -44,7 +44,7 @@ export default function Signup() {
     };
     return (
         <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-            <Head title="Signup" />
+            <Head title="Signup | Kafee Siyap" />
             <BackgroundOverlay />
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <img
@@ -116,7 +116,7 @@ export default function Signup() {
                     </div>
                 </form>
 
-                <p className="mt-10 text-center text-sm/6 text-gray-300">
+                <p className="mt-10 text-center text-sm/6 ">
                     Already registered?{" "}
                     <Link href="/login" className="font-semibold text-primary">
                         Login here

@@ -8,7 +8,16 @@ import GuestLayout from "./Layouts/GuestLayout";
 createInertiaApp({
     resolve: (name) => {
         const pages = import.meta.glob("./Pages/**/*.jsx", { eager: true });
-        return pages[`./Pages/${name}.jsx`];
+        const page = pages[`./Pages/${name}.jsx`];
+
+        if (!page) {
+            console.error(
+                `Page ${name} not found. Available pages:`,
+                Object.keys(pages)
+            );
+        }
+
+        return page;
     },
     setup({ el, App, props }) {
         createRoot(el).render(<App {...props} />);

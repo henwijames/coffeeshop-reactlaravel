@@ -21,12 +21,10 @@ export default function GuestLayout({ children }) {
                     className="flex items-center justify-between p-4 lg:px-8"
                 >
                     <div className="flex lg:flex-1">
-                        <a href="#" className="-m-1.5 p-1.5">
+                        <Link href="/" className="-m-1.5 p-1.5">
                             <span className="sr-only">Your Company</span>
-                            <Link href="/">
-                                <img src={Logo} alt="logo" className="w-12" />
-                            </Link>
-                        </a>
+                            <img src={Logo} alt="logo" className="w-12" />
+                        </Link>
                     </div>
                     <div className="flex lg:hidden">
                         <button

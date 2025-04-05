@@ -17,7 +17,7 @@ const Input = ({
                 <input
                     id={name}
                     name={name}
-                    className="input validator w-full"
+                    className="input w-full"
                     type={type}
                     value={value}
                     required

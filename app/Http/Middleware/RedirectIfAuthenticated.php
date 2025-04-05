@@ -4,10 +4,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class HandleNotFound
+class RedirectIfAuthenticated
 {
     /**
      * Handle an incoming request.
@@ -16,11 +16,13 @@ class HandleNotFound
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $response = $next($request);
-        if ($response->getStatusCode() === 404) {
-            return Inertia::render('Errors/NotFound')->toResponse($request)->setStatusCode(404);
-        }
+        $guards = empty($guards) ? [null] : $guards;
 
-        return $response;
+        foreach ($guards as $guard) {
+            if (Auth::guard(name: $guard)->check()) {
+                return redirect('/dashboard');
+            }
+        }
+        return $next($request);
     }
 }

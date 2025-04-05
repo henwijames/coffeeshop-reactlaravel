@@ -1,10 +1,12 @@
-import { Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import GuestLayout from "../Layouts/GuestLayout";
+import { useEffect } from "react";
 
 const Home = () => {
     return (
         <>
-            <h1 className="text-5xl font-semibold tracking-tight  sm:text-7xl">
+            <Head title="Kafee Siyap" />
+            <h1 className="text-5xl font-semibold tracking-tight sm:text-7xl">
                 Data to enrich your online business
             </h1>
             <p className="mt-8 text-lg font-medium  sm:text-xl">
@@ -14,7 +16,7 @@ const Home = () => {
             <div className="mt-10 flex items-center justify-center gap-x-6">
                 <Link
                     href="/login"
-                    className="rounded-md btn px-4 py-2 text-sm font-semibold text-white"
+                    className="btn btn-primary rounded-md px-4 py-2 text-sm font-semibold text-white"
                 >
                     Get started
                 </Link>
