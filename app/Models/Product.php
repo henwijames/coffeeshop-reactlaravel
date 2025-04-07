@@ -27,4 +27,14 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    /**
+     * The sizes that belong to this product.
+     */
+    public function sizes()
+    {
+        return $this->belongsToMany(Size::class)
+            ->withPivot('price')
+            ->withTimestamps();
+    }
 }

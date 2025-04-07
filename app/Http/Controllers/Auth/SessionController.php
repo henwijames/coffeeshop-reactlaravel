@@ -45,11 +45,7 @@ class SessionController extends Controller
 
         request()->session()->regenerate();
 
-        return Inertia::render('Dashboard', [
-            'auth' => [
-                'user' => Auth::user(),
-            ]
-        ]);
+        return redirect('/dashboard');
     }
 
     /**

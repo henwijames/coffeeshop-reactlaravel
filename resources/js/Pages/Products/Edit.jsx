@@ -3,13 +3,14 @@ import { Head, router, usePage } from "@inertiajs/react";
 import AuthLayout from "../../Layouts/AuthLayout";
 import Input from "../../Components/Input";
 import PageHeading from "../../Components/PageHeading";
-import { toast, ToastContainer } from "react-toastify";
+import useToast from "../../utils/useToast";
 import "react-toastify/dist/ReactToastify.css"; // Make sure to import the CSS
 import Swal from "sweetalert2";
 
-const Edit = ({ categories, product }) => {
+const Edit = ({ categories, product, sizes }) => {
     const { flash } = usePage().props;
     const previousFlashRef = useRef(flash);
+    const toast = useToast();
 
     const [values, setValues] = useState({
         name: product?.name || "",
@@ -18,6 +19,7 @@ const Edit = ({ categories, product }) => {
         category_id: product?.category_id || "",
         status: product?.is_available ?? true,
         image: null,
+        sizes: {},
     });
 
     const [errors, setErrors] = useState({});
@@ -25,6 +27,25 @@ const Edit = ({ categories, product }) => {
     const [previewImage, setPreviewImage] = useState(
         product?.image ? `/storage/${product.image}` : null
     );
+
+    // Initialize sizes with product's existing sizes
+    useEffect(() => {
+        if (sizes && sizes.length > 0) {
+            const sizesObj = {};
+            sizes.forEach((size) => {
+                // Check if product has this size
+                const productSize = product.sizes.find(
+                    (ps) => ps.id === size.id
+                );
+
+                sizesObj[size.id] = {
+                    selected: !!productSize,
+                    price: productSize ? productSize.pivot.price : null,
+                };
+            });
+            setValues((v) => ({ ...v, sizes: sizesObj }));
+        }
+    }, [sizes, product.sizes]);
 
     // Handle flash messages
     useEffect(() => {
@@ -68,6 +89,28 @@ const Edit = ({ categories, product }) => {
                     formData.append("image", values.image);
                 }
 
+                // Process sizes data - make sure it's simplified since we removed custom prices
+                const simplifiedSizes = {};
+                Object.entries(values.sizes).forEach(([sizeId, sizeData]) => {
+                    simplifiedSizes[sizeId] = {
+                        selected: sizeData.selected,
+                        price: null, // No custom price since we removed that section
+                    };
+                });
+
+                // Append sizes data
+                formData.append("sizes", JSON.stringify(simplifiedSizes));
+
+                // Log what we're sending
+                console.log("Form data being sent:", {
+                    name: values.name,
+                    description: values.description,
+                    price: values.price,
+                    category_id: values.category_id,
+                    is_available: values.status,
+                    sizes: simplifiedSizes,
+                });
+
                 router.post(`/products/${product.id}`, formData, {
                     forceFormData: true,
                     onSuccess: () => {
@@ -75,6 +118,7 @@ const Edit = ({ categories, product }) => {
                     },
                     onFinish: () => setProcessing(false),
                     onError: (errors) => {
+                        console.error("Form validation errors:", errors);
                         setErrors(errors);
                         toast.error("Please fix the errors in the form.");
                     },
@@ -110,15 +154,23 @@ const Edit = ({ categories, product }) => {
         }
     };
 
+    const handleSizeChange = (sizeId, field, value) => {
+        setValues((prev) => ({
+            ...prev,
+            sizes: {
+                ...prev.sizes,
+                [sizeId]: {
+                    ...prev.sizes[sizeId],
+                    [field]: value,
+                },
+            },
+        }));
+    };
+
     return (
         <>
             <Head title="Edit Product" />
             <PageHeading title="Edit Product" />
-            <ToastContainer
-                position="top-right"
-                autoClose={3000}
-                hideProgressBar={false}
-            />
 
             <div>
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -258,6 +310,49 @@ const Edit = ({ categories, product }) => {
                             Active
                         </label>
                     </div>
+
+                    {/* Sizes Field */}
+                    {sizes && sizes.length > 0 && (
+                        <div className="space-y-4">
+                            <label className="block text-sm font-medium text-gray-700">
+                                Available Sizes
+                            </label>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {sizes.map((size) => (
+                                    <div
+                                        key={size.id}
+                                        className="border rounded-lg p-4 bg-base-100"
+                                    >
+                                        <div className="flex items-center mb-2">
+                                            <input
+                                                type="checkbox"
+                                                id={`size-${size.id}`}
+                                                className="checkbox"
+                                                checked={
+                                                    values.sizes[size.id]
+                                                        ?.selected || false
+                                                }
+                                                onChange={(e) =>
+                                                    handleSizeChange(
+                                                        size.id,
+                                                        "selected",
+                                                        e.target.checked
+                                                    )
+                                                }
+                                            />
+                                            <label
+                                                htmlFor={`size-${size.id}`}
+                                                className="ml-2 font-medium"
+                                            >
+                                                {size.name} (+₱
+                                                {size.price_modifier})
+                                            </label>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Submit Button */}
                     <div>

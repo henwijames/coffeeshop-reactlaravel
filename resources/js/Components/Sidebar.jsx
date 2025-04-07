@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, usePage } from "@inertiajs/react";
 import {
     Coffee,
@@ -15,22 +15,31 @@ import {
     ChevronRight,
     PlusCircle,
     List,
+    ListOrdered,
+    ListOrderedIcon,
 } from "lucide-react";
+import useToast from "../utils/useToast";
 
-const Sidebar = ({ isOpen, onClose }) => {
-    const { url } = usePage();
-    const [expandedMenus, setExpandedMenus] = useState({
-        products: false,
-    });
+const Sidebar = ({ isOpen, onClose, siteName = "Coffee Shop" }) => {
+    const page = usePage();
+    const pageProps = page.props || {};
 
-    const toggleMenu = (menu) => {
-        setExpandedMenus((prev) => ({
-            ...prev,
-            [menu]: !prev[menu],
-        }));
-    };
+    // Get current URL using window.location for reliability
+    const currentPath =
+        typeof window !== "undefined" ? window.location.pathname : "";
 
-    const navLinks = [
+    // Get user role with good fallbacks
+    let userRole = "cashier"; // Default role
+    try {
+        userRole = pageProps.auth?.user?.role || "cashier";
+    } catch (e) {
+        console.error("Error accessing user role:", e);
+    }
+
+    const toast = useToast();
+
+    // Define all navigation items
+    const allNavLinks = [
         { id: 1, name: "Dashboard", href: "/dashboard", icon: Home },
         {
             id: 2,
@@ -54,10 +63,110 @@ const Sidebar = ({ isOpen, onClose }) => {
                 },
             ],
         },
-        { id: 4, name: "Customers", href: "/customers", icon: Users },
-        { id: 5, name: "Orders", href: "/orders", icon: ShoppingBag },
+        {
+            id: 5,
+            name: "Orders",
+            href: "/orders",
+            icon: ListOrdered,
+            hasSubmenu: true,
+            submenu: [
+                {
+                    id: 33,
+                    name: "All Orders",
+                    href: "/orders",
+                    icon: ListOrderedIcon,
+                },
+                {
+                    id: 34,
+                    name: "Order Product",
+                    href: "/orders/create",
+                    icon: PlusCircle,
+                },
+            ],
+        },
         { id: 6, name: "Settings", href: "/settings", icon: Settings },
     ];
+
+    // Define navigation links for cashiers (only Orders)
+    const cashierNavLinks = [
+        { id: 1, name: "Dashboard", href: "/dashboard", icon: Home },
+        {
+            id: 5,
+            name: "Orders",
+            href: "/orders",
+            icon: ListOrdered,
+            hasSubmenu: true,
+            submenu: [
+                {
+                    id: 33,
+                    name: "All Orders",
+                    href: "/orders",
+                    icon: ListOrderedIcon,
+                },
+                {
+                    id: 34,
+                    name: "Order Product",
+                    href: "/orders/create",
+                    icon: PlusCircle,
+                },
+            ],
+        },
+    ];
+
+    // Use role-based navigation with a fallback if auth is undefined
+    const navLinks = userRole === "admin" ? allNavLinks : cashierNavLinks;
+
+    // Initialize expanded menus state
+    const [expandedMenus, setExpandedMenus] = useState({});
+
+    // Helper function to safely check if the current path matches a given href
+    const isActivePath = (href) => {
+        if (!currentPath) return false;
+        return currentPath.startsWith(href);
+    };
+
+    // Update expanded menus when URL changes
+    useEffect(() => {
+        const updatedMenus = {};
+
+        // Auto-expand active sections
+        navLinks.forEach((item) => {
+            if (item.hasSubmenu) {
+                const menuKey = item.name.toLowerCase();
+                let shouldExpand = false;
+
+                // If the current URL is this menu's base path
+                if (currentPath === item.href) {
+                    shouldExpand = true;
+                }
+
+                // If the current URL is one of the submenu paths
+                if (
+                    item.submenu.some((subItem) =>
+                        currentPath.startsWith(subItem.href)
+                    )
+                ) {
+                    shouldExpand = true;
+                }
+
+                if (shouldExpand) {
+                    updatedMenus[menuKey] = true;
+                }
+            }
+        });
+
+        setExpandedMenus((prev) => ({
+            ...prev,
+            ...updatedMenus,
+        }));
+    }, [currentPath, navLinks]);
+
+    const toggleMenu = (menu) => {
+        setExpandedMenus((prev) => ({
+            ...prev,
+            [menu]: !prev[menu],
+        }));
+    };
 
     return (
         <>
@@ -71,7 +180,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
             {/* Sidebar */}
             <div
-                className={`fixed inset-y-0 left-0 z-30 w-64 bg-primary transition-transform text-white duration-300 transform lg:translate-x-0 lg:static lg:inset-0 ${
+                className={`fixed inset-y-0 left-0 z-30 w-64 bg-primary transition-transform text-neutral dark:text-white duration-300 transform lg:translate-x-0 lg:static lg:inset-0 ${
                     isOpen ? "translate-x-0" : "-translate-x-full"
                 }`}
             >
@@ -79,7 +188,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                     <div className="flex items-center space-x-2">
                         <Coffee className="h-8 w-8" />
                         <span className="text-lg font-semibold">
-                            Coffee Shop
+                            {siteName}
                         </span>
                     </div>
                     <button
@@ -89,7 +198,8 @@ const Sidebar = ({ isOpen, onClose }) => {
                         <X size={20} />
                     </button>
                 </div>
-                <nav className="mt-5 px-2">
+
+                <nav className="mt-3 px-2">
                     <div className="space-y-1">
                         {navLinks.map((item) => (
                             <React.Fragment key={item.id}>
@@ -97,12 +207,14 @@ const Sidebar = ({ isOpen, onClose }) => {
                                     <div className="space-y-1">
                                         <button
                                             onClick={() =>
-                                                toggleMenu("products")
+                                                toggleMenu(
+                                                    item.name.toLowerCase()
+                                                )
                                             }
-                                            className={`flex items-center justify-between text-white w-full px-4 py-2 rounded-md transition-colors duration-200 ${
-                                                url.startsWith(item.href)
-                                                    ? "bg-gray-900 text-white"
-                                                    : "hover:bg-gray-700 hover:text-white"
+                                            className={`flex items-center justify-between w-full px-4 py-2 rounded-md transition-colors duration-200 ${
+                                                isActivePath(item.href)
+                                                    ? "bg-accent text-white font-medium"
+                                                    : "hover:bg-accent"
                                             }`}
                                         >
                                             <div className="flex items-center">
@@ -111,7 +223,9 @@ const Sidebar = ({ isOpen, onClose }) => {
                                             </div>
                                             <div
                                                 className={`transform transition-transform duration-200 ${
-                                                    expandedMenus.products
+                                                    expandedMenus[
+                                                        item.name.toLowerCase()
+                                                    ]
                                                         ? "rotate-180"
                                                         : ""
                                                 }`}
@@ -123,7 +237,9 @@ const Sidebar = ({ isOpen, onClose }) => {
                                         {/* Submenu with animation */}
                                         <div
                                             className={`transform overflow-hidden transition-all duration-200 ease-in-out ${
-                                                expandedMenus.products
+                                                expandedMenus[
+                                                    item.name.toLowerCase()
+                                                ]
                                                     ? "max-h-40 opacity-100"
                                                     : "max-h-0 opacity-0"
                                             }`}
@@ -134,9 +250,11 @@ const Sidebar = ({ isOpen, onClose }) => {
                                                         key={subItem.id}
                                                         href={subItem.href}
                                                         className={`flex items-center px-4 py-2 rounded-md transition-colors duration-200 ${
-                                                            url === subItem.href
-                                                                ? "bg-gray-900 text-white"
-                                                                : "hover:bg-gray-700 hover:text-white"
+                                                            isActivePath(
+                                                                subItem.href
+                                                            )
+                                                                ? "bg-accent font-medium"
+                                                                : "hover:bg-accent"
                                                         }`}
                                                         onClick={onClose}
                                                     >
@@ -150,10 +268,10 @@ const Sidebar = ({ isOpen, onClose }) => {
                                 ) : (
                                     <Link
                                         href={item.href}
-                                        className={`flex items-center px-4 py-2 rounded-md text-white transition-colors duration-200 ${
-                                            url.startsWith(item.href)
-                                                ? "bg-gray-900 text-white"
-                                                : "hover:bg-gray-700 hover:text-white"
+                                        className={`flex items-center px-4 py-2 rounded-md transition-colors duration-200 ${
+                                            isActivePath(item.href)
+                                                ? "bg-accent text-white font-medium"
+                                                : "hover:bg-accent"
                                         }`}
                                         onClick={onClose}
                                     >

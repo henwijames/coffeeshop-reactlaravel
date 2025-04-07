@@ -43,12 +43,30 @@ class HandleInertiaRequests extends Middleware
                     'name' => Auth::user()->name,
                     'email' => Auth::user()->email,
                     'profile_image' => Auth::user()->profile_image,
+                    'role' => Auth::user()->role,
                 ] : null
             ],
             'flash' => [
                 'success' => $request->session()->get('success'),
                 'error' => $request->session()->get('error'),
             ],
+            'appSettings' => $this->getAppSettings(),
         ]);
+    }
+
+    /**
+     * Get application settings from the database
+     */
+    private function getAppSettings(): array
+    {
+        try {
+            return \App\Models\Setting::all()->keyBy('key')->map->value->toArray();
+        } catch (\Exception $e) {
+            return [
+                'site_name' => 'Kaffee Siyap',
+                'site_theme' => 'coffee',
+                'primary_color' => '#DB924C',
+            ];
+        }
     }
 }

@@ -1,11 +1,11 @@
-import { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Head, router, usePage } from "@inertiajs/react";
 import AuthLayout from "../Layouts/AuthLayout";
 import PageHeading from "../Components/PageHeading";
 import Modal from "../Components/Modal";
 import { Edit, Plus, Trash } from "lucide-react";
 import Input from "../Components/Input";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 
@@ -82,11 +82,9 @@ const Categories = ({ categories }) => {
 
     return (
         <>
-            <Head title="Categories | Kaffee Siyap" />
-            <ToastContainer /> {/* This is needed for showing toasts */}
+            <Head title="Categories" />
+            <PageHeading title="Categories" />
             <div className="flex justify-between items-center">
-                <PageHeading title="Categories" />
-
                 <Modal
                     id="add_category"
                     title="Add Category"

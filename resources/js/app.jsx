@@ -1,29 +1,44 @@
 import "./bootstrap";
 import "../css/app.css";
 
-import { createInertiaApp } from "@inertiajs/react";
 import { createRoot } from "react-dom/client";
-import GuestLayout from "./Layouts/GuestLayout";
+import { createInertiaApp } from "@inertiajs/react";
+import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
+import { applyTheme, applyPrimaryColor } from "./utils/themeUtils";
+
+// Apply theme on app load
+function applyInitialTheme() {
+    // First try to get theme from localStorage (for immediate theme preview)
+    const storedTheme = localStorage.getItem("theme");
+    const storedColor = localStorage.getItem("primaryColor");
+
+    if (storedTheme) {
+        applyTheme(storedTheme);
+    }
+
+    if (storedColor) {
+        applyPrimaryColor(storedColor);
+    }
+}
+
+// Apply theme immediately
+applyInitialTheme();
+
+const appName = import.meta.env.VITE_APP_NAME || "Kaffee Siyap";
 
 createInertiaApp({
-    resolve: (name) => {
-        const pages = import.meta.glob("./Pages/**/*.jsx", { eager: true });
-        const page = pages[`./Pages/${name}.jsx`];
-
-        if (!page) {
-            console.error(
-                `Page ${name} not found. Available pages:`,
-                Object.keys(pages)
-            );
-        }
-
-        return page;
-    },
+    title: (title) => `${title} | ${appName}`,
+    resolve: (name) =>
+        resolvePageComponent(
+            `./Pages/${name}.jsx`,
+            import.meta.glob("./Pages/**/*.jsx")
+        ),
     setup({ el, App, props }) {
-        createRoot(el).render(<App {...props} />);
+        const root = createRoot(el);
+
+        root.render(<App {...props} />);
     },
     progress: {
-        // The color of the progress bar...
-        color: "#634832",
+        color: "#4B5563",
     },
 });

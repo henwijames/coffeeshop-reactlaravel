@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -18,7 +20,7 @@ class ProductController extends Controller
         $categories = Category::orderBy('name')->get();
 
         // Get products grouped by category
-        $products = Product::with('category')
+        $products = Product::with(['category', 'sizes'])
             ->get()
             ->groupBy('category.name');
 
@@ -34,9 +36,11 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::orderBy('name')->get();
+        $sizes = Size::orderBy('price_modifier')->get();
 
         return Inertia::render('Products/Create', [
-            'categories' => $categories
+            'categories' => $categories,
+            'sizes' => $sizes
         ]);
     }
 
@@ -51,7 +55,8 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'is_available' => 'boolean',
-            'image' => 'nullable|image|max:2048' // Max 2MB
+            'image' => 'nullable|image|max:2048', // Max 2MB
+            'sizes' => 'array|nullable'
         ]);
 
         try {
@@ -61,7 +66,23 @@ class ProductController extends Controller
                 $validated['image'] = $path;
             }
 
-            Product::create($validated);
+            // Create the product
+            $product = Product::create($validated);
+
+            // Attach sizes if provided
+            if ($request->has('sizes') && is_array($request->sizes)) {
+                $sizesData = [];
+
+                foreach ($request->sizes as $sizeId => $sizeData) {
+                    if (isset($sizeData['selected']) && $sizeData['selected']) {
+                        $sizesData[$sizeId] = [
+                            'price' => isset($sizeData['price']) ? $sizeData['price'] : null
+                        ];
+                    }
+                }
+
+                $product->sizes()->attach($sizesData);
+            }
 
             return redirect()->back()->with('success', 'Product created successfully');
         } catch (\Exception $e) {
@@ -83,9 +104,14 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::orderBy('name')->get();
+        $sizes = Size::orderBy('price_modifier')->get();
+
+        // Load sizes with pivot data
+        $product->load('sizes');
 
         return Inertia::render('Products/Edit', [
             'categories' => $categories,
+            'sizes' => $sizes,
             'product' => $product
         ]);
     }
@@ -95,13 +121,21 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        // First log the incoming request data for debugging
+        Log::info('Product update request data:', [
+            'all' => $request->all(),
+            'hasSize' => $request->has('sizes'),
+            'sizes' => $request->input('sizes')
+        ]);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'is_available' => 'boolean',
-            'image' => 'nullable|image|max:2048' // Max 2MB
+            'image' => 'nullable|image|max:2048', // Max 2MB
+            'sizes' => 'nullable' // Allow any format for sizes for now
         ]);
 
         try {
@@ -116,10 +150,44 @@ class ProductController extends Controller
                 $validated['image'] = $path;
             }
 
+            // Update the product
             $product->update($validated);
+
+            // Handle sizes with more flexible approach
+            if ($request->has('sizes')) {
+                $sizesData = [];
+                $sizesInput = is_string($request->sizes) ? json_decode($request->sizes, true) : $request->sizes;
+
+                if ($sizesInput && is_array($sizesInput)) {
+                    foreach ($sizesInput as $sizeId => $sizeData) {
+                        // Only add sizes that are selected
+                        if (isset($sizeData['selected']) && $sizeData['selected']) {
+                            $sizesData[$sizeId] = [
+                                'price' => isset($sizeData['price']) && $sizeData['price'] !== '' ?
+                                    $sizeData['price'] : null
+                            ];
+                        }
+                    }
+
+                    // Sync the sizes
+                    $product->sizes()->sync($sizesData);
+                } else {
+                    Log::warning('Invalid sizes data format in product update', [
+                        'sizes' => $request->sizes,
+                        'decoded' => $sizesInput
+                    ]);
+                }
+            } else {
+                // If no sizes provided, detach all
+                $product->sizes()->detach();
+            }
 
             return redirect()->route('products.index')->with('success', 'Product updated successfully');
         } catch (\Exception $e) {
+            Log::error('Error updating product: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request' => $request->all()
+            ]);
             return redirect()->back()->with('error', 'Failed to update product: ' . $e->getMessage());
         }
     }

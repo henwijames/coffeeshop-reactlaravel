@@ -26,7 +26,7 @@ const SidebarHeader = ({ openSidebar }) => {
     return (
         <>
             <Head title="Dashboard | Kafee Siyap" />
-            <header className="bg-base-300 shadow ">
+            <header className="bg-base-100 shadow ">
                 <div className="px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
                     <button
                         className="lg:hidden p-2 rounded-md hover:bg-base-100 focus:outline-none transition-colors duration-300"
@@ -41,6 +41,9 @@ const SidebarHeader = ({ openSidebar }) => {
                                 className="flex items-center space-x-2 focus:outline-none cursor-pointer"
                                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                             >
+                                <span className="text-xs font-medium bg-gray-700 text-white px-2 py-1 rounded capitalize">
+                                    {auth?.user?.role || "guest"}
+                                </span>
                                 <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden">
                                     {auth.user?.profile_image ? (
                                         <img
@@ -73,7 +76,7 @@ const SidebarHeader = ({ openSidebar }) => {
                                         Your Profile
                                     </Link>
                                     <Link
-                                        href="#"
+                                        href="/settings"
                                         className="block px-4 py-2 text-sm hover:text-primary transition-colors duration-300 cursor-pointer"
                                     >
                                         Settings

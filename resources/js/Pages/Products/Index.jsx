@@ -66,7 +66,7 @@ const Index = ({ categories, products }) => {
                     />
                     <div
                         role="tabpanel"
-                        className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+                        className="tab-content bg-base-100 border-base-300 p-6"
                     >
                         {Object.values(products).flat().length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -105,6 +105,33 @@ const Index = ({ categories, products }) => {
                                                         {product.category?.name}
                                                     </div>
                                                 </div>
+
+                                                {/* Display available sizes */}
+                                                {product.sizes &&
+                                                    product.sizes.length >
+                                                        0 && (
+                                                        <div className="mt-2">
+                                                            <span className="text-xs text-gray-500">
+                                                                Available sizes:
+                                                            </span>
+                                                            <div className="flex flex-wrap gap-1 mt-1">
+                                                                {product.sizes.map(
+                                                                    (size) => (
+                                                                        <span
+                                                                            key={
+                                                                                size.id
+                                                                            }
+                                                                            className="badge badge-sm badge-outline"
+                                                                        >
+                                                                            {
+                                                                                size.name
+                                                                            }
+                                                                        </span>
+                                                                    )
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 <div className="card-actions justify-end mt-4">
                                                     <Link
                                                         href={`/products/${product.id}/edit`}
@@ -205,6 +232,34 @@ const Index = ({ categories, products }) => {
                                                                 {category.name}
                                                             </div>
                                                         </div>
+
+                                                        {/* Display available sizes */}
+                                                        {product.sizes && (
+                                                            <div className="mt-2">
+                                                                <span className="text-xs text-gray-500">
+                                                                    Available
+                                                                    sizes:
+                                                                </span>
+                                                                <div className="flex flex-wrap gap-1 mt-1">
+                                                                    {product.sizes.map(
+                                                                        (
+                                                                            size
+                                                                        ) => (
+                                                                            <span
+                                                                                key={
+                                                                                    size.id
+                                                                                }
+                                                                                className="badge badge-sm badge-outline"
+                                                                            >
+                                                                                {
+                                                                                    size.name
+                                                                                }
+                                                                            </span>
+                                                                        )
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        )}
                                                         <div className="card-actions justify-end mt-4">
                                                             <Link
                                                                 href={`/products/${product.id}/edit`}

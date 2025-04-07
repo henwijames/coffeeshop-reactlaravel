@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Head, useForm, usePage, router } from "@inertiajs/react";
 import PageHeading from "../Components/PageHeading";
 import AuthLayout from "../Layouts/AuthLayout";
 import Input from "../Components/Input";
-import { toast, ToastContainer } from "react-toastify";
+import useToast from "../utils/useToast";
+import "react-toastify/dist/ReactToastify.css";
 
 const Profile = ({ user }) => {
     const { data, setData, put, processing, errors } = useForm({
@@ -16,6 +17,7 @@ const Profile = ({ user }) => {
     const [previewImage, setPreviewImage] = useState(
         user.profile_image || null
     );
+    const toast = useToast();
 
     useEffect(() => {
         if (
@@ -85,9 +87,9 @@ const Profile = ({ user }) => {
 
     return (
         <>
+            <Head title="Profile" />
             <PageHeading title="Profile" />
-            <ToastContainer />
-            <div className="flex flex-col ">
+            <div className="grid gap-8 lg:grid-cols-3">
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Profile Image Upload */}
                     <div className="flex items-center space-x-6">

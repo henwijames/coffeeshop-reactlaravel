@@ -67,6 +67,7 @@ export default function Signup() {
                             value={formData.name}
                             onChange={handleChange}
                             error={errors.name}
+                            className="w-full"
                         />
                     </div>
                     <div>
@@ -78,6 +79,7 @@ export default function Signup() {
                             value={formData.email}
                             onChange={handleChange}
                             error={errors.email}
+                            className="w-full"
                         />
                     </div>
 
@@ -91,6 +93,7 @@ export default function Signup() {
                             value={formData.password}
                             onChange={handleChange}
                             error={errors.password}
+                            className="w-full"
                         />
                     </div>
                     <div>
@@ -103,6 +106,7 @@ export default function Signup() {
                             value={formData.password_confirmation}
                             onChange={handleChange}
                             error={errors.password_confirmation}
+                            className="w-full"
                         />
                     </div>
 

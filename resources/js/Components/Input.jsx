@@ -7,6 +7,7 @@ const Input = ({
     error,
     value,
     onChange,
+    className,
 }) => {
     return (
         <div>
@@ -17,7 +18,7 @@ const Input = ({
                 <input
                     id={name}
                     name={name}
-                    className="input w-full"
+                    className={`input ${className}`}
                     type={type}
                     value={value}
                     required

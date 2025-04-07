@@ -60,6 +60,7 @@ export default function Login() {
                             value={formData.email}
                             onChange={handleChange}
                             error={errors.email}
+                            className="w-full"
                         />
                     </div>
 
@@ -74,6 +75,7 @@ export default function Login() {
                             value={formData.password}
                             onChange={handleChange}
                             error={errors.password}
+                            className="w-full"
                         />
                     </div>
 

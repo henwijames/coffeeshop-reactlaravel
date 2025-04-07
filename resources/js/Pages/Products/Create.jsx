@@ -1,14 +1,15 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Head, router, usePage } from "@inertiajs/react";
 import AuthLayout from "../../Layouts/AuthLayout";
 import Input from "../../Components/Input";
 import PageHeading from "../../Components/PageHeading";
-import { toast, ToastContainer } from "react-toastify";
+import useToast from "../../utils/useToast";
 import "react-toastify/dist/ReactToastify.css"; // Make sure to import the CSS
 
-const Create = ({ categories }) => {
+const Create = ({ categories, sizes }) => {
     const { flash } = usePage().props;
     const previousFlashRef = useRef(flash);
+    const toast = useToast();
 
     const [values, setValues] = useState({
         name: "",
@@ -17,11 +18,26 @@ const Create = ({ categories }) => {
         category_id: "",
         status: true,
         image: null,
+        sizes: {},
     });
 
     const [errors, setErrors] = useState({});
     const [processing, setProcessing] = useState(false);
     const [previewImage, setPreviewImage] = useState(null);
+
+    // Initialize sizes with empty objects
+    useEffect(() => {
+        if (sizes && sizes.length > 0) {
+            const sizesObj = {};
+            sizes.forEach((size) => {
+                sizesObj[size.id] = {
+                    selected: false,
+                    price: null,
+                };
+            });
+            setValues((v) => ({ ...v, sizes: sizesObj }));
+        }
+    }, [sizes]);
 
     // Handle flash messages
     useEffect(() => {
@@ -54,6 +70,9 @@ const Create = ({ categories }) => {
             formData.append("image", values.image);
         }
 
+        // Append sizes data
+        formData.append("sizes", JSON.stringify(values.sizes));
+
         router.post("/products", formData, {
             forceFormData: true,
             onSuccess: () => {
@@ -65,6 +84,7 @@ const Create = ({ categories }) => {
                     category_id: "",
                     status: true,
                     image: null,
+                    sizes: {},
                 });
                 setPreviewImage(null);
                 // Toast is handled by the flash message in useEffect
@@ -88,6 +108,19 @@ const Create = ({ categories }) => {
         }));
     };
 
+    const handleSizeChange = (sizeId, field, value) => {
+        setValues((prev) => ({
+            ...prev,
+            sizes: {
+                ...prev.sizes,
+                [sizeId]: {
+                    ...prev.sizes[sizeId],
+                    [field]: value,
+                },
+            },
+        }));
+    };
+
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -107,12 +140,7 @@ const Create = ({ categories }) => {
     return (
         <>
             <Head title="Create Product" />
-            <PageHeading title="Create Product" />
-            <ToastContainer
-                position="top-right"
-                autoClose={3000}
-                hideProgressBar={false}
-            />
+            <PageHeading title="Add New Product" />
 
             <div>
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -237,6 +265,82 @@ const Create = ({ categories }) => {
                             </p>
                         )}
                     </div>
+
+                    {/* Sizes Field */}
+                    {sizes && sizes.length > 0 && (
+                        <div className="space-y-4">
+                            <label className="block text-sm font-medium text-gray-700">
+                                Available Sizes
+                            </label>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {sizes.map((size) => (
+                                    <div
+                                        key={size.id}
+                                        className="border rounded-lg p-4 bg-base-100"
+                                    >
+                                        <div className="flex items-center mb-2">
+                                            <input
+                                                type="checkbox"
+                                                id={`size-${size.id}`}
+                                                className="checkbox"
+                                                checked={
+                                                    values.sizes[size.id]
+                                                        ?.selected || false
+                                                }
+                                                onChange={(e) =>
+                                                    handleSizeChange(
+                                                        size.id,
+                                                        "selected",
+                                                        e.target.checked
+                                                    )
+                                                }
+                                            />
+                                            <label
+                                                htmlFor={`size-${size.id}`}
+                                                className="ml-2 font-medium"
+                                            >
+                                                {size.name} (+₱
+                                                {size.price_modifier})
+                                            </label>
+                                        </div>
+                                        {values.sizes[size.id]?.selected && (
+                                            <div>
+                                                <label
+                                                    htmlFor={`size-price-${size.id}`}
+                                                    className="block text-sm mb-1"
+                                                >
+                                                    Custom Price (Optional)
+                                                </label>
+                                                <input
+                                                    type="number"
+                                                    id={`size-price-${size.id}`}
+                                                    className="input input-bordered input-sm w-full"
+                                                    placeholder="Leave empty to use base price + modifier"
+                                                    value={
+                                                        values.sizes[size.id]
+                                                            ?.price || ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        handleSizeChange(
+                                                            size.id,
+                                                            "price",
+                                                            e.target.value ===
+                                                                ""
+                                                                ? null
+                                                                : parseFloat(
+                                                                      e.target
+                                                                          .value
+                                                                  )
+                                                        )
+                                                    }
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Status Field */}
                     <div className="flex items-center space-x-3">
