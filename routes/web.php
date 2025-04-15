@@ -57,10 +57,11 @@ Route::middleware('auth')->group(function () {
 // Admin-only routes
 Route::middleware(['auth'])->group(function () {
     // Categories routes
-    Route::get('/categories', [CategoryController::class, 'create']);
-    Route::post('/categories', [CategoryController::class, 'store']);
-    Route::put('/categories/{id}', [CategoryController::class, 'update']);
-    Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+    // Route::get('/categories', [CategoryController::class, 'create']);
+    // Route::post('/categories', [CategoryController::class, 'store']);
+    // Route::put('/categories/{id}', [CategoryController::class, 'update']);
+    // Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+    Route::resource('categories', CategoryController::class);
 
     // Products routes
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');

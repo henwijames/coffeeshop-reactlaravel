@@ -7,7 +7,7 @@ import useToast from "../utils/useToast";
 import "react-toastify/dist/ReactToastify.css";
 
 const Profile = ({ user }) => {
-    const { data, setData, put, processing, errors } = useForm({
+    const { data, setData, processing, errors } = useForm({
         name: user.name || "",
         email: user.email || "",
         profile_image: null,
@@ -20,6 +20,7 @@ const Profile = ({ user }) => {
     const toast = useToast();
 
     useEffect(() => {
+        console.log("FLASH DATA:", flash); // Debug this!
         if (
             flash.success &&
             flash.success !== previousFlashRef.current?.success

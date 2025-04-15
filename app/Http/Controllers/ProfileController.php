@@ -71,12 +71,10 @@ class ProfileController extends Controller
                 // Store new image
                 $path = $request->file('profile_image')->store('profile-images', 'public');
                 $validated['profile_image'] = $path;
-                Log::info('New profile image stored at: ' . $path);
             }
 
             // Update user
             $user->update($validated);
-            Log::info('User updated successfully', ['user_id' => $user->id]);
 
             // Return success response
             return redirect()->back()->with('success', 'Profile updated successfully');

@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap");
+
 @import "tailwindcss";
 @plugin "daisyui" {
     themes: light --default, dark --prefersdark, coffee, light, cupcake,
@@ -13,4 +15,8 @@
     --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
         "Noto Color Emoji";
+}
+
+body {
+    font-family: "Roboto Slab", serif;
 }

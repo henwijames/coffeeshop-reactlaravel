@@ -112,14 +112,9 @@ const Sidebar = ({ isOpen, onClose, siteName = "Coffee Shop" }) => {
             ],
         },
     ];
-
-    // Use role-based navigation with a fallback if auth is undefined
     const navLinks = userRole === "admin" ? allNavLinks : cashierNavLinks;
-
-    // Initialize expanded menus state
     const [expandedMenus, setExpandedMenus] = useState({});
 
-    // Helper function to safely check if the current path matches a given href
     const isActivePath = (href) => {
         if (!currentPath) return false;
         return currentPath.startsWith(href);
@@ -129,18 +124,15 @@ const Sidebar = ({ isOpen, onClose, siteName = "Coffee Shop" }) => {
     useEffect(() => {
         const updatedMenus = {};
 
-        // Auto-expand active sections
         navLinks.forEach((item) => {
             if (item.hasSubmenu) {
                 const menuKey = item.name.toLowerCase();
                 let shouldExpand = false;
 
-                // If the current URL is this menu's base path
                 if (currentPath === item.href) {
                     shouldExpand = true;
                 }
 
-                // If the current URL is one of the submenu paths
                 if (
                     item.submenu.some((subItem) =>
                         currentPath.startsWith(subItem.href)
@@ -155,11 +147,17 @@ const Sidebar = ({ isOpen, onClose, siteName = "Coffee Shop" }) => {
             }
         });
 
-        setExpandedMenus((prev) => ({
-            ...prev,
-            ...updatedMenus,
-        }));
-    }, [currentPath, navLinks]);
+        const hasChanges = Object.keys(updatedMenus).some(
+            (key) => updatedMenus[key] !== expandedMenus[key]
+        );
+
+        if (hasChanges) {
+            setExpandedMenus((prev) => ({
+                ...prev,
+                ...updatedMenus,
+            }));
+        }
+    }, [currentPath]);
 
     const toggleMenu = (menu) => {
         setExpandedMenus((prev) => ({
