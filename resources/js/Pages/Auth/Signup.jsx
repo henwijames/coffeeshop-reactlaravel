@@ -1,6 +1,5 @@
 import { Head, Link, router } from "@inertiajs/react";
 import Logo from "@public/logo.webp";
-import BackgroundOverlay from "../../Components/BackgroundOverlay";
 import Input from "../../Components/Input";
 import { useState } from "react";
 
@@ -45,7 +44,6 @@ export default function Signup() {
     return (
         <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
             <Head title="Signup | Kafee Siyap" />
-            <BackgroundOverlay />
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <img
                     alt="Your Company"

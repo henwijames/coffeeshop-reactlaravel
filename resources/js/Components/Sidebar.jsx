@@ -19,6 +19,7 @@ import {
     ListOrderedIcon,
 } from "lucide-react";
 import useToast from "../utils/useToast";
+import Logo from "@public/logo.webp";
 
 const Sidebar = ({ isOpen, onClose, siteName = "Coffee Shop" }) => {
     const page = usePage();
@@ -184,7 +185,7 @@ const Sidebar = ({ isOpen, onClose, siteName = "Coffee Shop" }) => {
             >
                 <div className="flex items-center justify-between px-6 py-4 border-b border-gray-700">
                     <div className="flex items-center space-x-2">
-                        <Coffee className="h-8 w-8" />
+                        <img src={Logo} alt="logo" width={50} />
                         <span className="text-lg font-semibold">
                             {siteName}
                         </span>

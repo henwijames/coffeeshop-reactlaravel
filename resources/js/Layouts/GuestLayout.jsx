@@ -20,7 +20,7 @@ export default function GuestLayout({ children }) {
                             className="-m-1.5 p-1.5 flex items-center gap-2"
                         >
                             <img src={Logo} alt="logo" className="w-12" />
-                            <span className=" text-black">güüd coffee</span>
+                            <span className=" text-black">Kaffee Siyap</span>
                         </Link>
                     </div>
                     <div className="flex  lg:justify-end">
